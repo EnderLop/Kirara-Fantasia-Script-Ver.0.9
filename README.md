@@ -47,9 +47,7 @@
 ---
 ## 源代码 ##
 ```
-#Kirara Fantasia代肝脚本
-# -*- coding: utf-8 -*-
-#@author:EnderLop
+#Kirara Fantasia代肝脚本（新）
 from os import getcwd
 from PIL import ImageGrab
 import numpy as np
@@ -59,6 +57,7 @@ windowNum = 0
 x0,y0,x1,y1 = 0,0,1919,1079
 lenX,lenY = 1920,1080
 R0,G0,B0 = 0,0,0
+
 
 """游戏预先处理单元"""
 '''窗口变换适应算法'''
@@ -105,11 +104,6 @@ def cornerConfig(info):
             if not colorCompareOrigin(info,i,j) and colorCompareOrigin(info,(i+1),j) and colorCompareOrigin(info,i,(j+1)) and colorCompareOrigin(info,(i+1),(j+1)):
                 x1,y1 = i,j
 
-def click(state_x,state_y,n):
-    win32api.SetCursorPos((state_x,state_y))
-    for i  in range(n):
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
 """游戏信息获取单元"""
 '''截取当前屏幕色块信息'''
@@ -134,6 +128,12 @@ def colorCompareOrigin(info,stateX,stateY):
     else:
         return False
 
+'''鼠标操作'''
+def mouse_click(state_x,state_y,n):
+    win32api.SetCursorPos((state_x,state_y))
+    for i  in range(n):
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
 '''判断珍藏技是否准备就绪'''
 def starShine(info):
@@ -164,21 +164,21 @@ def fangWenJump(info):
         if autoShine(info):#关闭AUTO
             for round in range(5):
                 if autoShine(detectFlash()):
-                    click(stateTransform(1825,30)[0],stateTransform(1825,30)[1],1)
+                    mouse_click(stateTransform(1825,30)[0],stateTransform(1825,30)[1],1)
                     time.sleep(0.25)
                 elif not autoShine(detectFlash()) and not (autoShine(detectFlash()) is None):
                         break
             else:
                 return None
-        click(stateTransform(655,965)[0],stateTransform(655,965)[1],1)
+        mouse_click(stateTransform(655,965)[0],stateTransform(655,965)[1],1)
         time.sleep(0.5)
     elif colorCompare(detectFlash(),1350,920,3,113,104):
-        click(stateTransform(1690,190)[0],stateTransform(1690,190)[1],1)
+        mouse_click(stateTransform(1690,190)[0],stateTransform(1690,190)[1],1)
         time.sleep(0.5)
-        click(stateTransform(1565,965)[0],stateTransform(1565,965)[1],1)
+        mouse_click(stateTransform(1565,965)[0],stateTransform(1565,965)[1],1)
         time.sleep(0.5)
         for i in range(7):
-            click(stateTransform(960,540)[0],stateTransform(960,540)[1],1)
+            mouse_click(stateTransform(960,540)[0],stateTransform(960,540)[1],1)
             time.sleep(1)
         print("{}：完成一次芳文跳释放".format(time.strftime("%Y/%m/%d %H:%M:%S")))
 
@@ -187,7 +187,7 @@ def feelFish(info):
     if not starShine(info) and not autoShine(info) and not (starShine(info) is None) and not (autoShine(info) is None):
         for round in range(5):
             if not autoShine(detectFlash()) and not (autoShine(detectFlash()) is None):
-                click(stateTransform(1825,30)[0],stateTransform(1825,30)[1],1)
+                mouse_click(stateTransform(1825,30)[0],stateTransform(1825,30)[1],1)
                 time.sleep(0.5)
             elif autoShine(info):
                 print("{}：完成AUTO模式的开启".format(time.strftime("%Y/%m/%d %H:%M:%S")))
@@ -200,21 +200,21 @@ def finallyFinsih(info):
     if finishShine(info):
         time.sleep(1)
         for round in range(3):
-            click(stateTransform(960,800)[0],stateTransform(960,800)[1],1)
+            mouse_click(stateTransform(960,800)[0],stateTransform(960,800)[1],1)
             time.sleep(1)
             if colorCompare(detectFlash(),630,280,255,154,185) and colorCompare(detectFlash(),630,130,127,77,92):
-                click(stateTransform(960,680)[0],stateTransform(960,680)[1],1)
+                time.sleep(1)
+                mouse_click(stateTransform(960,680)[0],stateTransform(960,680)[1],1)
         print("{}：完成一场大对战刷轮".format(time.strftime("%Y/%m/%d %H:%M:%S")))
 
 '''在对战结束且仍有剩余体力的情况下自动再开一把对战'''
 def restartGame(info):
     global totalRound
     if colorCompare(info,580,85,255,154,185) and colorCompare(info,695,885,200,152,110):
-        click(stateTransform(630,990)[0],stateTransform(630,990)[1],1)
+        mouse_click(stateTransform(630,990)[0],stateTransform(630,990)[1],1)
         time.sleep(3)
         totalRound += 1
         print("{0}：已完成{1}场战斗,正在开始第{2}场战斗".format(time.strftime("%Y/%m/%d %H:%M:%S"),totalRound,totalRound+1))
-
 
 '''主函数'''
 def main():
